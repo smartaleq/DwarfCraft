@@ -46,9 +46,10 @@ public class DwarfCraftPlayerSkills {
 		saveSkills();
 	}
 	
-	public static int getSkillLevel(int SkillId, String playerName){
+	public static int getSkillLevel(int skillId, String playerName){
 		int playerNumber = getPlayerNumber(playerName);
-		int skillLevel = playerSkillsArray[playerNumber][SkillId]; 
+		int skillLevel = playerSkillsArray[playerNumber][skillId]; 
+		if(DwarfCraftSkills.getSkillName(skillId)==null){return -1;}
 		return skillLevel;
 	}
 	
@@ -147,6 +148,10 @@ public class DwarfCraftPlayerSkills {
 		player.sendMessage("Printing Skill Sheet for " + playerName + "  Player Level is " + DwarfCraftSkillTraining.playerLevel(playerName));
 		int skillId=0;
 		int printLineSkillCount=0;
+		if(DwarfCraftPlayerSkills.isPlayerElf(playerName)){
+			player.sendMessage("Elves don't have skills, numbskull");
+			return;
+		}
 		while (skillId<maximumSkillCount){
 			if (printLineSkillCount == 3) skillId++;
 			printLineSkillCount = 0;
@@ -154,6 +159,7 @@ public class DwarfCraftPlayerSkills {
 			skillNames[1] = "";
 			skillNames[2] = "";
 			while (printLineSkillCount < 3){
+				if (skillId == 100) break;
 				skillName = DwarfCraftSkills.skillName(skillId);
 				if (skillName != null){
 					skillNames[printLineSkillCount] = skillName;
@@ -164,13 +170,13 @@ public class DwarfCraftPlayerSkills {
 			}
 			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);
 		}
+//		if (printLineSkillCount==2){
+//			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);
+//		}
 		if (printLineSkillCount==2){
-			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);
-		}
-		if (printLineSkillCount==1){
 			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]);
 		}
-		if (printLineSkillCount==0){
+		if (printLineSkillCount==1){
 			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]);
 		}		
 	}	

@@ -7,9 +7,17 @@ import org.bukkit.entity.Player;
 public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 
 
-	
-	public static int attemptSkillUp(int skillId, String playerName, Player player){ //return -1:not enough items, return -2: skill max, return 0: failed, return 1: success
+	/*
+	 * Results from attemptSkillUp:
+	 * return -1: not enough items
+	 * return -2: skill max
+	 * return -3: no such skill
+	 * return 0: failed
+	 * return 1: success
+	 */
+	public static int attemptSkillUp(int skillId, String playerName, Player player){ 
 		try{
+			if(DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName) == -1){return -2;}
 			if(DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName) == 30){return -2;}
 			int[] skillCost;
 			skillCost = new int[8];
@@ -41,6 +49,8 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 	public static void makeElf(String playerName){
 		int playerNumber = getPlayerNumber(playerName);
 		playerSkillsArray[playerNumber][0] = 1;
+		DwarfCraftPlayerSkills.backupSkills();
+		DwarfCraftPlayerSkills.saveSkills();
 	}
 	
 	/*
@@ -50,8 +60,12 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 		int playerNumber = getPlayerNumber(playerName);
 		for(int i = 0; i < maximumSkillCount; i++){
 			playerSkillsArray[playerNumber][i] = 0;
+			
 		}
+		DwarfCraftPlayerSkills.backupSkills();
+		DwarfCraftPlayerSkills.saveSkills();
 	}
+	
 	/*
 	 * this will count how many skills a player has above level 5
 	 */
@@ -118,7 +132,10 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 
 	public static int getSkillIdFromName(String string) {
 		for(int skillId = 0; skillId < maximumSkillCount; skillId++){
-			if(string.regionMatches(0, DwarfCraftSkills.skillsArray[skillId][DwarfCraftSkills.skillNameColumn], 0, 6 /*length to compare skill names*/)){return skillId;}
+			System.out.println("trying to get skill name " + string + "at skillId " + skillId);
+			if(DwarfCraftSkills.skillsArray[skillId][DwarfCraftSkills.skillNameColumn] != null){
+				if(string.regionMatches(0, DwarfCraftSkills.skillsArray[skillId][DwarfCraftSkills.skillNameColumn], 0, 6 /*length to compare skill names*/)){return skillId;}
+			}
 		}
 		return 0;
 	}

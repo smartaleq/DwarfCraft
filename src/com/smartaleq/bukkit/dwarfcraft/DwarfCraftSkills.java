@@ -16,7 +16,7 @@ public class DwarfCraftSkills {
 	 */
 	static String fileName = "./plugins/DwarfCraft/skillsdata.config";
 	
-	static int totalColumns = 11;
+	static int totalColumns = 12;
 	static int skillNameColumn = 1;
 	static int skillSchoolColumn = 2;
 	static int skillTrainingItemCountColumn = 3;
@@ -70,7 +70,7 @@ public class DwarfCraftSkills {
 	
 	public static int[] getSkillTrainingCost(int skillId, int newSkillLevel, String playerName){
 		int[] trainingCosts;
-		trainingCosts = new int[7];
+		trainingCosts = new int[8];
 		trainingCosts[0] = Integer.parseInt(skillsArray[skillId][skillTrainingItemCountColumn]);
 		
 		// Calculate multiplier for this level

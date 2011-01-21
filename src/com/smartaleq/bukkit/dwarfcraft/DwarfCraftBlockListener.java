@@ -63,7 +63,9 @@ public class DwarfCraftBlockListener extends BlockListener {
 					int outputBlock = DwarfCraftSkillEffects.getEffectResult(effectId);
 					int outputCount = DwarfCraftSkillEffects.getRandomBlockCount(effectBenefit);
 					byte outputDamage = (byte)0;
+					if (outputBlock >0){
 					event.getBlock().getWorld().dropItem(destroyedBlockLocation, new ItemStack(outputBlock, outputCount, outputDamage));
+					}
 				}
 			}
 		}
