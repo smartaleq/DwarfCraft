@@ -41,14 +41,9 @@ public class DwarfCraftBlockListener extends BlockListener {
 			System.out.println("trying getEffects");
 			int applicableEffects[] = new int[7]; 
 			applicableEffects = DwarfCraftSkillEffects.getEffects(destroyedBlockType, "itemdrop");
-			
-			System.out.println("effects count = " + applicableEffects[0]);
-			
 			if (applicableEffects[0] == 0) {
-				System.out.println("no effects found");
 				return;}
 			else {
-				System.out.println("effects found");
 				//replace block with air and drop appropriate results
 				event.setCancelled(true); 	
 				block.setType(Material.AIR);	
@@ -57,12 +52,14 @@ public class DwarfCraftBlockListener extends BlockListener {
 					int effectId = applicableEffects[i];
 					int skillId = DwarfCraftSkillEffects.getSkillForEffect(effectId);
 					int playerSkillLevel;
+					//elves get the elf level (close as possible to 
 					if(DwarfCraftPlayerSkills.isPlayerElf(playerName)){
 						playerSkillLevel = DwarfCraftSkillEffects.getElfLevel(effectId);
 					}
 					else {
 						playerSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);
 					}
+					
 					double effectBenefit = DwarfCraftSkillEffects.getEffectValue(effectId, playerSkillLevel);
 					int outputBlock = DwarfCraftSkillEffects.getEffectResult(effectId);
 					int outputCount = DwarfCraftSkillEffects.getRandomBlockCount(effectBenefit);
