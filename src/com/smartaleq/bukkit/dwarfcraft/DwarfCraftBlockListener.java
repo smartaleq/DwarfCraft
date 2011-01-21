@@ -31,7 +31,7 @@ public class DwarfCraftBlockListener extends BlockListener {
 			Block block = event.getBlock();
 			Location destroyedBlockLocation = new Location(event.getBlock().getWorld(), event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ(), 0, 0);
 			int destroyedBlockType = block.getTypeId();
-			int destroyedBlockMeta = block.getData();
+//			int destroyedBlockMeta = block.getData();
 			Player player = event.getPlayer();
 			String playerName = player.getDisplayName();
 

@@ -17,6 +17,7 @@ public class DwarfCraft extends JavaPlugin {
  * A Block listener.
  */
 private final DwarfCraftBlockListener blockListener = new DwarfCraftBlockListener(this);
+private final DwarfCraftPlayerListener	playerListener	= new DwarfCraftPlayerListener(this);
 
 /**
  * Something related to debugging
@@ -40,7 +41,9 @@ public void onEnable() {
     // Register our events
     PluginManager pm = getServer().getPluginManager();
 	pm.registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.High, this);
-	// TODO: register player join event
+	pm.registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Normal, this);
+	pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
+
 	
 	DwarfCraftSkillEffects.readEffects();
 	DwarfCraftSkills.readSkills();
