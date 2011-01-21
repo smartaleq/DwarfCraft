@@ -23,6 +23,10 @@ public class DwarfCraftSkills {
 	static int skillTrainingNoviceIncrementColumn = 10;
 	static int skillTrainingMasterMultiplierColumn = 11;
 	
+	public static String skillName(int skillId){
+		return skillsArray[skillId][skillNameColumn];
+	}
+	
 	public static void readSkills(){
 		String line = "";
 		System.out.println("Attempting to read skills file");
@@ -64,9 +68,9 @@ public class DwarfCraftSkills {
 		return skillsArray[skillId][skillSchoolColumn];
 	}
 	
-	public int[] getSkillTrainingCost(int skillId, int newSkillLevel, String playerName){
+	public static int[] getSkillTrainingCost(int skillId, int newSkillLevel, String playerName){
 		int[] trainingCosts;
-		trainingCosts = new int[6];
+		trainingCosts = new int[7];
 		trainingCosts[0] = Integer.parseInt(skillsArray[skillId][skillTrainingItemCountColumn]);
 		
 		// Calculate multiplier for this level

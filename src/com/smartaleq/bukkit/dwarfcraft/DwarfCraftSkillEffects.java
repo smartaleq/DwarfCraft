@@ -61,7 +61,6 @@ public class DwarfCraftSkillEffects {
 		double value = 0.0;
 		if(effectValue != null){
 			value = Double.parseDouble(skillEffectsArray[effectId][effectLevel+skillLevelStartColumn]); 
-			System.out.println("Got value " + value);
 		}
 		return value;
 	}

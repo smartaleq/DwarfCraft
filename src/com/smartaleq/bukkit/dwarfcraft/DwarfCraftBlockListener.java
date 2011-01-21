@@ -38,7 +38,6 @@ public class DwarfCraftBlockListener extends BlockListener {
 			/* 
 			 * check to see if block destroyed has itemdrop effects listed
 			 */
-			System.out.println("trying getEffects");
 			int applicableEffects[] = new int[7]; 
 			applicableEffects = DwarfCraftSkillEffects.getEffects(destroyedBlockType, "itemdrop");
 			if (applicableEffects[0] == 0) {
