@@ -70,7 +70,7 @@ public class DwarfCraftSkills {
 	
 	public static int[] getSkillTrainingCost(int skillId, int newSkillLevel, String playerName){
 		int[] trainingCosts;
-		trainingCosts = new int[8];
+		trainingCosts = new int[7];
 		trainingCosts[0] = Integer.parseInt(skillsArray[skillId][skillTrainingItemCountColumn]);
 		
 		// Calculate multiplier for this level
@@ -78,19 +78,19 @@ public class DwarfCraftSkills {
 		//multiplier for levels 0-5
 		baseMultiplier = Math.ceil(Math.max((double)newSkillLevel, 5) * Double.parseDouble(skillsArray[skillId][skillTrainingNoviceIncrementColumn]));
 		//multiplier for levels 6-30
-		baseMultiplier = baseMultiplier * (Math.pow(Double.parseDouble(skillsArray[skillId][skillTrainingMasterMultiplierColumn]), Math.min(0,newSkillLevel-5)));
-		//mutliplier for secondary skill training
-		if(newSkillLevel > 5 && newSkillLevel < DwarfCraftSkillTraining.topQuartileThreshold(playerName)){
-			baseMultiplier = baseMultiplier * (1 + (DwarfCraftSkillTraining.playerLevel(playerName)/100+2*DwarfCraftSkillTraining.playerLevel(playerName)));
+		if(newSkillLevel > 5){
+			baseMultiplier = baseMultiplier * (Math.pow(Double.parseDouble(skillsArray[skillId][skillTrainingMasterMultiplierColumn]), Math.min(0,newSkillLevel-5)));
+			//mutliplier for secondary skill training
+			if(newSkillLevel > 5 && newSkillLevel < DwarfCraftSkillTraining.topQuartileThreshold(playerName)){
+				baseMultiplier = baseMultiplier * (1 + (DwarfCraftSkillTraining.playerLevel(playerName)/100+2*DwarfCraftSkillTraining.playerLevel(playerName)));
+			}
 		}
-		
 		for(int i=0 ; i<trainingCosts[0] ; i++){
 			//insert training items into cells 1, 3, 5
-			trainingCosts[1+(2*i)] = Integer.parseInt(skillsArray[skillId][skillTrainingItemCountColumn+(2*i)]);
+			trainingCosts[1+(2*i)] = Integer.parseInt(skillsArray[skillId][skillTrainingItemCountColumn+1+(2*i)]);
 			//insert training itemcounts into cells 2, 4, 6
-			trainingCosts[2+(2*i)] = (int)Math.floor(baseMultiplier * Double.parseDouble(skillsArray[skillId][skillTrainingItemCountColumn+1+(2*i)]));
+			trainingCosts[2+(2*i)] = (int)Math.floor(baseMultiplier * Double.parseDouble(skillsArray[skillId][skillTrainingItemCountColumn+2+(2*i)]));
 		}
-		System.out.println("Got training costs");
 		return trainingCosts;
 }
 	

@@ -118,7 +118,7 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 	}
 
 	public static void skillInfo(Player player, String playerName, int skillId) {
-		player.sendMessage("------------------------------------------------------");
+		player.sendMessage("-----------------------------------------------------");
 		player.sendMessage("Skill Information: " + DwarfCraftSkills.getSkillName(skillId) + "(id:" + skillId + ")");
 		player.sendMessage("To train to level " + (DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName)+1) + "will cost:");
 		int[] trainingCosts;
@@ -127,7 +127,7 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 		player.sendMessage("item Id: " + trainingCosts[1] + "  number required: " + trainingCosts[2]);
 		if (trainingCosts[0]>1){player.sendMessage("item Id: " + trainingCosts[3] + "  number required: " + trainingCosts[4]);}
 		if (trainingCosts[0]>2){player.sendMessage("item Id: " + trainingCosts[5] + "  number required: " + trainingCosts[6]);}
-		player.sendMessage("------------------------------------------------------");
+		player.sendMessage("-----------------------------------------------------");
 	}
 
 	public static int getSkillIdFromName(String string) {

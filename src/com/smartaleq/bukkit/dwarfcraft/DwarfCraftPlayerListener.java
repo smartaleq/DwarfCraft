@@ -37,10 +37,14 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 						}
 						else {
 							if(split[3] != null){split[2] = split[2] + " " + split[3];};
+							skillId = DwarfCraftSkillTraining.getSkillIdFromName(split[2]);
 						}
-						skillId = DwarfCraftSkillTraining.getSkillIdFromName(split[2]);
-						if(skillId == 0) {player.sendMessage("Couldn't Find skillId or skillName: " + split[2]);}
-						DwarfCraftSkillTraining.skillInfo(player, playerName, skillId);
+						if(skillId == 0) {
+							player.sendMessage("Couldn't Find skillId or skillName: " + split[2]);
+							}
+						else{
+							DwarfCraftSkillTraining.skillInfo(player, playerName, skillId);
+						}
 						event.setCancelled(true);
 						return;
 					}
