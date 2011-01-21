@@ -55,11 +55,7 @@ public class DwarfCraftBlockListener extends BlockListener {
 				for(int i=1; i <= applicableEffects[0]; i++) {
 					System.out.println("for effect # " + i);
 					int effectId = applicableEffects[i];
-					
-					System.out.println("try to get skill id for effect # " + effectId);
 					int skillId = DwarfCraftSkillEffects.getSkillForEffect(effectId);
-					
-					System.out.println("try to get appropriate skill level for skill # " + skillId);
 					int playerSkillLevel;
 					if(DwarfCraftPlayerSkills.isPlayerElf(playerName)){
 						playerSkillLevel = DwarfCraftSkillEffects.getElfLevel(effectId);
@@ -67,18 +63,11 @@ public class DwarfCraftBlockListener extends BlockListener {
 					else {
 						playerSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);
 					}
-										
-					System.out.println("try to get effect benefit for effect # " + effectId + " and skill level = " + playerSkillLevel);
 					double effectBenefit = DwarfCraftSkillEffects.getEffectValue(effectId, playerSkillLevel);
-					
-					System.out.println("try to create blocks");
 					int outputBlock = DwarfCraftSkillEffects.getEffectResult(effectId);
-					System.out.println("geteffectresult worked");
 					int outputCount = DwarfCraftSkillEffects.getRandomBlockCount(effectBenefit);
-					System.out.println("getrandomblockcount worked");
-					byte outputDamage = (byte)4;
+					byte outputDamage = (byte)0;
 					event.getBlock().getWorld().dropItem(destroyedBlockLocation, new ItemStack(outputBlock, outputCount, outputDamage));
-					System.out.println("dropitem worked");
 				}
 			}
 		}

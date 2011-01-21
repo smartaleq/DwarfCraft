@@ -13,6 +13,7 @@ public class DwarfCraftSkillEffects {
 	 * file schema names for v1.0
 	 */
 	static String fileName = "./plugins/DwarfCraft/effectsdata.config";
+	static int effectsTotal = 1000;
 	static int totalColumns = 36;
 	static int skillLevelStartColumn = 1;
 	static int elfLevelColumn = 32;
@@ -26,14 +27,14 @@ public class DwarfCraftSkillEffects {
 		
 	    System.out.println("Attempting to read skill effects file");
 		
-		skillEffectsArray = new String[1000][totalColumns];
+		skillEffectsArray = new String[effectsTotal][totalColumns];
 		
 		try {
 			FileReader fr = new FileReader(fileName);
 			BufferedReader br = new BufferedReader(fr);
 			int effectid = 0;
 			int column = 0;
-			for(int i = 0; i < 999; i++) {
+			for(int i = 0; i < effectsTotal -1; i++) {
 				line = br.readLine();
 				if(line != null){
 					String[] theline = line.split(",");
@@ -92,12 +93,9 @@ public class DwarfCraftSkillEffects {
 		int effectId;
 		int arraySlot = 1;		
 		int[] outputArray;
-
 		outputArray = new int[8];
-		
 		System.out.println(itemId);
-		
-		for(effectId = 0; effectId<1000; effectId++){
+		for(effectId = 0; effectId<effectsTotal; effectId++){
 			String activeEffect = skillEffectsArray[effectId][effectTypeColumn];
 			if(activeEffect != null){
 				if(activeEffect.equalsIgnoreCase(effectType)){
@@ -114,7 +112,6 @@ public class DwarfCraftSkillEffects {
 				}
 			}	
 		}
-//	    System.out.println("Got Effects");
 		outputArray[0] = effectCount; 
 		return outputArray;
 	}
