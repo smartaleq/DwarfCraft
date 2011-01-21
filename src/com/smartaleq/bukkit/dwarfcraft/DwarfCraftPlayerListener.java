@@ -20,6 +20,7 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 		String playerName = player.getDisplayName();
 		if (split.length >= 1) {
 			if (split[0].equalsIgnoreCase("/levelskill")) {
+				if(Integer.parseInt(split[1]) >= 100 || Integer.parseInt(split[1]) < 0){return;};
 				int skillId = Integer.parseInt(split[1]);
 				DwarfCraftSkillTraining.increaseSkill(skillId, playerName);
 				int skillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);

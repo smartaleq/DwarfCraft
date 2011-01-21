@@ -128,6 +128,7 @@ public class DwarfCraftPlayerSkills {
 				writer.write(",\n");
 				
 			}
+			writer.close();
 		}	
 		catch(FileNotFoundException fN) {
 			fN.printStackTrace();
