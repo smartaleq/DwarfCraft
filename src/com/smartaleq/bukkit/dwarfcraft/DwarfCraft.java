@@ -46,7 +46,11 @@ public void onEnable() {
 
 	
 	DwarfCraftSkillEffects.readEffects();
-	DwarfCraftSkills.readSkills();
+	/* Dan doesnt know how java does enums well enough.
+	   He thinks it will eventually be worth investigating
+	   whether the enums need to be initialized manually at runtime,
+	   and a public instance of each kept for general touching. */
+	//DwarfCraftSkills.readSkills();
 	DwarfCraftPlayerSkills.readPlayers();
 	
 	

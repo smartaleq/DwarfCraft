@@ -23,7 +23,9 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 			int[] skillCost;
 			skillCost = new int[8];
 			int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);
-			skillCost = DwarfCraftSkills.getSkillTrainingCost(skillId, newSkillLevel, playerName);
+			/* Dan thinks skillId could be removed from the arguments in this function
+			   getSkillTrainingCost */
+			skillCost = Skills.values()[skillId].getSkillTrainingCost(skillId, newSkillLevel, playerName);
 			for (int i = 0; i < skillCost[0];i++){
 				//check inventory quantity for needed items
 				if (DwarfCraftInventory.countInventoryItems(skillCost[1+2*i], player) < skillCost[2+2*i]){return -1;}
@@ -64,7 +66,8 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 		}
 		DwarfCraftPlayerSkills.backupSkills();
 		DwarfCraftPlayerSkills.saveSkills();
-		CraftServer.getPlayer(playerName).sendMessage("You're now a Dwarf");
+		// Its mad we're doing this from a static function :[
+		//CraftServer.getPlayer(playerName).sendMessage("You're now a Dwarf");
 		
 	}
 	
@@ -119,25 +122,30 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 		return playerLevel;
 	}
 
-	public static void skillInfo(Player player, String playerName, int skillId) {
-		int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName) + 1;
-		player.sendMessage("-----------------------------------------------------");
-		player.sendMessage("Skill Information: " + DwarfCraftSkills.getSkillName(skillId) + " (id: " + skillId + "a)");
-		player.sendMessage("To train to level " + newSkillLevel + " will cost:");
-		int[] trainingCosts;
-		trainingCosts = new int[7];
-		trainingCosts = DwarfCraftSkills.getSkillTrainingCost(skillId, newSkillLevel, playerName);
-		player.sendMessage("item Id: " + trainingCosts[1] + "  number required: " + trainingCosts[2]);
-		if (trainingCosts[0]>1){player.sendMessage("item Id: " + trainingCosts[3] + "  number required: " + trainingCosts[4]);}
-		if (trainingCosts[0]>2){player.sendMessage("item Id: " + trainingCosts[5] + "  number required: " + trainingCosts[6]);}
-		player.sendMessage("-----------------------------------------------------");
-	}
-
+    public static void skillInfo(Player player, String playerName, int skillId) {
+	int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName) + 1;
+	player.sendMessage("-----------------------------------------------------");
+	player.sendMessage("Skill Information: " + Skills.values()[skillId].professionName + " (id: " + skillId + "a)");
+	player.sendMessage("To train to level " + newSkillLevel + " will cost:");
+	int[] trainingCosts;
+	trainingCosts = new int[7];
+	trainingCosts = Skills.values()[skillId].getSkillTrainingCost(skillId, newSkillLevel, playerName);
+	player.sendMessage("item Id: " + trainingCosts[1] + "  number required: " + trainingCosts[2]);
+	if (trainingCosts[0]>1){player.sendMessage("item Id: " + trainingCosts[3] + "  number required: " + trainingCosts[4]);}
+	if (trainingCosts[0]>2){player.sendMessage("item Id: " + trainingCosts[5] + "  number required: " + trainingCosts[6]);}
+	player.sendMessage("-----------------------------------------------------");
+    }
+    
 	public static int getSkillIdFromName(String string) {
 		for(int skillId = 0; skillId < maximumSkillCount; skillId++){
 			System.out.println("trying to get skill name " + string + "at skillId " + skillId);
-			if(DwarfCraftSkills.skillsArray[skillId][DwarfCraftSkills.skillNameColumn] != null){
-				if(string.regionMatches(0, DwarfCraftSkills.skillsArray[skillId][DwarfCraftSkills.skillNameColumn], 0, 6 /*length to compare skill names*/)){return skillId;}
+			/* Not sure if it makes sense to check the validity of skilNameColumn anymore
+			   because we define it within an enum, not some funky text file...
+			   skillId might make a little more sense to check, though. Admittedly, dan didn't
+			   bother to check where maximumSkillCount is made, so blurgle */
+			//if(DwarfCraftSkills.skillsArray[skillId][DwarfCraftSkills.skillNameColumn] != null){
+			if(skillId <= Skills.values().length-1){
+			    if(string.regionMatches(0, Skills.values()[skillId].professionName, 0, 6 /*length to compare skill names*/)){return skillId;}
 			}
 		}
 		return 0;

@@ -120,6 +120,7 @@ public class DwarfCraftSkillEffects {
 	 */
 	static int getEffectResult(int effectId){
 		String outputNumber = skillEffectsArray[effectId][effectItemsOutputColumn];
+		System.out.println("effectId: "+effectId+"    effectItemsOutputColumn: "+effectItemsOutputColumn);
 		outputNumber = outputNumber.trim();
 		int effectResultItem = Integer.parseInt(outputNumber);
 		return effectResultItem;

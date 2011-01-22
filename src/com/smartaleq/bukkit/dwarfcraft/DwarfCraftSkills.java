@@ -104,7 +104,7 @@ public class DwarfCraftSkills {
 	
 	// 		Fuck Enums - doing this arraystyle like effects ...Done
 	
-//public enum DwarfCraftSkills {
+//public enum Skills {
 //	PICKAXEUSE (1,"Pickaxe Use","Tool Use",1,10,0,0,0,0,0,0,0,1,4,16,0,0,0,0,1,1.3),
 //	SHOVELUSE (2,"Shovel Use","Tool Use",1,20,0,0,0,0,0,0,0,1,3,32,0,0,0,0,0.5,1.3),
 //	AXEDURABILITY (3,"Axe Durability","Tool Use",1,30,0,0,0,0,0,0,0,1,17,16,0,0,0,0,0.5,1.3),

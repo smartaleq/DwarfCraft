@@ -4,6 +4,7 @@ import java.io.*;
 import org.bukkit.entity.Player;
 import org.bukkit.croemmich.searchids.Colors;
 
+
 public class DwarfCraftPlayerSkills {
 
 	static String playerSkillsFileName = "DwarfCraftPlayers.data";
@@ -54,7 +55,7 @@ public class DwarfCraftPlayerSkills {
 	public static int getSkillLevel(int skillId, String playerName){
 		int playerNumber = getPlayerNumber(playerName);
 		int skillLevel = playerSkillsArray[playerNumber][skillId]; 
-		if(DwarfCraftSkills.getSkillName(skillId)==null){return -1;}
+		if(skillId > Skills.values().length-1){return -1;}
 		return skillLevel;
 	}
 	
@@ -165,7 +166,7 @@ public class DwarfCraftPlayerSkills {
 			skillNames[2] = "";
 			while (printLineSkillCount < 3){
 				if (skillId == 100) break;
-				skillName = DwarfCraftSkills.skillName(skillId);
+				skillName = Skills.values()[skillId].professionName;
 				if (skillName != null){
 					skillNames[printLineSkillCount] = skillName;
 					skillLevels[printLineSkillCount] = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);
