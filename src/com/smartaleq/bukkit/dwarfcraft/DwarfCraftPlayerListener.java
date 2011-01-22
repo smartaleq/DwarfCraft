@@ -2,8 +2,10 @@ package com.smartaleq.bukkit.dwarfcraft;
 
 import java.io.IOException;
 
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
+// import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 
@@ -110,7 +112,7 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 					}
 					else if (split[1].equalsIgnoreCase("makemeadwarf")){
 						if(!DwarfCraftPlayerSkills.isPlayerElf(playerName)){
-							player.sendMessage("You're already a dwarf. If you want to reset              skills  use /dc reallymakemeadwarf");
+							player.sendMessage("You're already a dwarf. If you want to reset                     skills  use /dc REALLYmakemeadwarf");
 							event.setCancelled(true);
 							return;
 						}
@@ -129,7 +131,7 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 					}
 					else if (split[1].equalsIgnoreCase("makemeanelf")){
 						player.sendMessage("Elves have no skill levels and act like a vanilla player");
-						player.sendMessage("if this is what you want, try saying /dc ireallywanttobeanelf");
+						player.sendMessage("if this is what you want, try saying /dc iREALLYwanttobeanelf");
 						event.setCancelled(true);
 						return;
 					}
@@ -151,12 +153,16 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 		}
 	}
 	
-	void onPlayerJoin(PlayerLoginEvent event){
+	@Override
+	public void onPlayerJoin(PlayerEvent event){
 		Player player = event.getPlayer();
-			String playerName = player.getDisplayName();
-			if(DwarfCraftPlayerSkills.getPlayerNumber(playerName) == -1){
-			if(DwarfCraftPlayerSkills.countPlayers() != DwarfCraftPlayerSkills.maxPlayers){
-				DwarfCraftPlayerSkills.addNewPlayer(playerName);
+		String playerName = player.getDisplayName();
+		if(DwarfCraftPlayerSkills.getPlayerNumber(playerName) == -1){
+			int playerCount = DwarfCraftPlayerSkills.countPlayers();
+			if(playerCount != DwarfCraftPlayerSkills.maxPlayers){
+				DwarfCraftPlayerSkills.addNewPlayer(playerName, player);
+				playerCount++;
+				System.out.println("There are now " + playerCount + " players registered with DwarfCraft");
 			}
 			else {
 				//throw max players in database reached thingamabob
@@ -164,11 +170,11 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 		}
 		else {
 			if(DwarfCraftSkillTraining.isPlayerElf(playerName)){
-				player.sendMessage("you are an elf");
+				player.sendMessage("Welcome, elf " + playerName);
 				//welcome elf, may you die often due to your unskilled nature
 			}
 			else{
-				player.sendMessage("you are a dwarf");
+				player.sendMessage("Welcome, dwarf " + playerName);
 				//print to screen "welcome dwarf whatever of playerskilllevel whatever"
 			}
 		 }

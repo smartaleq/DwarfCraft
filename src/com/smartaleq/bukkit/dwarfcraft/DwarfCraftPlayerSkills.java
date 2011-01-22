@@ -2,7 +2,7 @@ package com.smartaleq.bukkit.dwarfcraft;
 
 import java.io.*;
 import org.bukkit.entity.Player;
-
+import org.bukkit.croemmich.searchids.Colors;
 
 public class DwarfCraftPlayerSkills {
 
@@ -19,11 +19,15 @@ public class DwarfCraftPlayerSkills {
 	static int maximumSkillCount = 100;
 		
 	public static int getPlayerNumber(String playerName){
-		int playerNumber = 0; //come back and change this
+		int playerNumber = -1; //come back and change this
 		for(int i=0; i < maxPlayers; i++){
-			if(playerNamesArray[i] == playerName){playerNumber = i;};
-		}
-		if (playerNumber == 0){// throw noSuchPlayer;
+			if(playerNamesArray[i] == null){
+				continue;
+				}
+			if(playerNamesArray[i].length() == 0){
+				continue;
+				}
+			if(playerNamesArray[i].equalsIgnoreCase(playerName)){playerNumber = i;};
 		}
 		return playerNumber;
 	}
@@ -31,19 +35,20 @@ public class DwarfCraftPlayerSkills {
 	public static int countPlayers(){
 		int playerCount = 0;
 		for(int i=0; i < maxPlayers; i++){
-			if(playerNamesArray[i] != null){playerCount++;};
+			if(playerNamesArray[i] == null){continue;}
+			if(playerNamesArray[i].length() != 0){playerCount++;};
 		}
 		System.out.println("counted " + playerCount + " players");
 		return playerCount;
 	}
 	
-	static void addNewPlayer(String playerName){
+	static void addNewPlayer(String playerName, Player player){
 		int newPlayerNumber = countPlayers()+1;
-		System.out.println("your new player number is " + newPlayerNumber);
 		playerNamesArray[newPlayerNumber] = playerName;
-		DwarfCraftSkillTraining.makeDwarf(playerName);
+		player.sendMessage("Welcome to the server, " + Colors.Blue + playerName);
 		backupSkills();
-		saveSkills();
+		saveSkills();		
+		DwarfCraftSkillTraining.makeDwarf(playerName);
 	}
 	
 	public static int getSkillLevel(int skillId, String playerName){
@@ -168,7 +173,9 @@ public class DwarfCraftPlayerSkills {
 				}
 				skillId++;
 			}
-			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);
+			if (printLineSkillCount == 3) {
+				player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);
+			}
 		}
 //		if (printLineSkillCount==2){
 //			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);

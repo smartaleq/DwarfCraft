@@ -1,7 +1,8 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
 import java.util.Arrays;
-
+import org.bukkit.*;
+import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 
 public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
@@ -60,10 +61,11 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 		int playerNumber = getPlayerNumber(playerName);
 		for(int i = 0; i < maximumSkillCount; i++){
 			playerSkillsArray[playerNumber][i] = 0;
-			
 		}
 		DwarfCraftPlayerSkills.backupSkills();
 		DwarfCraftPlayerSkills.saveSkills();
+		CraftServer.getPlayer(playerName).sendMessage("You're now a Dwarf");
+		
 	}
 	
 	/*
@@ -118,12 +120,13 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 	}
 
 	public static void skillInfo(Player player, String playerName, int skillId) {
+		int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName) + 1;
 		player.sendMessage("-----------------------------------------------------");
-		player.sendMessage("Skill Information: " + DwarfCraftSkills.getSkillName(skillId) + "(id:" + skillId + ")");
-		player.sendMessage("To train to level " + (DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName)+1) + "will cost:");
+		player.sendMessage("Skill Information: " + DwarfCraftSkills.getSkillName(skillId) + " (id: " + skillId + "a)");
+		player.sendMessage("To train to level " + newSkillLevel + " will cost:");
 		int[] trainingCosts;
 		trainingCosts = new int[7];
-		trainingCosts = DwarfCraftSkills.getSkillTrainingCost(skillId, (DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName)+1), playerName);
+		trainingCosts = DwarfCraftSkills.getSkillTrainingCost(skillId, newSkillLevel, playerName);
 		player.sendMessage("item Id: " + trainingCosts[1] + "  number required: " + trainingCosts[2]);
 		if (trainingCosts[0]>1){player.sendMessage("item Id: " + trainingCosts[3] + "  number required: " + trainingCosts[4]);}
 		if (trainingCosts[0]>2){player.sendMessage("item Id: " + trainingCosts[5] + "  number required: " + trainingCosts[6]);}
