@@ -131,3 +131,4 @@ public enum Skills {
 	    return trainingCosts;
 	}
 }
+

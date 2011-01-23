@@ -49,7 +49,8 @@ public void onEnable() {
 	/* Dan doesnt know how java does enums well enough.
 	   He thinks it will eventually be worth investigating
 	   whether the enums need to be initialized manually at runtime,
-	   and a public instance of each kept for general touching. */
+	   and a public instance of each kept for general touching.
+	   perhaps with a wrapper class*/
 	//DwarfCraftSkills.readSkills();
 	DwarfCraftPlayerSkills.readPlayers();
 	
