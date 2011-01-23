@@ -1,7 +1,12 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
 import java.io.IOException;
-
+import org.bukkit.Server;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginLoader;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -45,7 +50,7 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 							player.sendMessage("Couldn't Find skillId or skillName: " + split[2]);
 							}
 						else{
-							DwarfCraftSkillTraining.skillInfo(player, playerName, skillId);
+							DwarfCraftSkillTraining.skillInfo(player, skillId);
 						}
 						event.setCancelled(true);
 						return;
@@ -59,7 +64,7 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 					if (split[1].equalsIgnoreCase("canitrain")) {
 						player.sendMessage("Caught canitrain");
 						int skillId = Integer.parseInt(split[2]);
-						int trainResult = DwarfCraftSkillTraining.attemptSkillUp(skillId, playerName, player);
+						int trainResult = DwarfCraftSkillTraining.attemptSkillUp(skillId, player);
 						if(trainResult == 1){
 							player.sendMessage("Yes, you can train this skill right now!");
 						}
@@ -81,11 +86,11 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 					if (split[1].equalsIgnoreCase("train")) {
 						player.sendMessage("Caught train");
 						int skillId = Integer.parseInt(split[2]);
-						if(DwarfCraftSkillTraining.attemptSkillUp(skillId, playerName, player) == 1){
-							DwarfCraftSkillTraining.increaseSkill(skillId, playerName);
+						if(DwarfCraftSkillTraining.attemptSkillUp(skillId, player) == 1){
+							DwarfCraftSkillTraining.increaseSkill(skillId, player);
 						}
 						player.sendMessage("Skill level increased!");
-						DwarfCraftSkillTraining.skillInfo(player, playerName, skillId);
+						DwarfCraftSkillTraining.skillInfo(player, skillId);
 						event.setCancelled(true);
 						return;
 					}
@@ -93,8 +98,8 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 						player.sendMessage("Caught increaseskill");
 						if(Integer.parseInt(split[2]) < 100 && Integer.parseInt(split[2]) > 0){
 							int skillId = Integer.parseInt(split[2]);
-							DwarfCraftSkillTraining.increaseSkill(skillId, playerName);
-							int skillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);
+							DwarfCraftSkillTraining.increaseSkill(skillId, player);
+							int skillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, player);
 							player.sendMessage("Your skill #" + skillId + " has been increased to level " + skillLevel);
 							event.setCancelled(true);
 							return;
@@ -102,29 +107,30 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 						else throw new IOException( "Bad argument");
 					}
 					else if (split[1].equalsIgnoreCase("skillsheet")){
-						player.sendMessage("Caught skillsheet");
+						Player viewer = player;
 						if (split.length == 3 ){
-							if(DwarfCraftPlayerSkills.getPlayerNumber(split[2])>0){playerName = split[2];}
+							String playerViewedName = split[2];
+							// player  = DwarfCraft.getserver().getplayer(playerViewedName); not working due to getserver() vs staticness
 						}
-						DwarfCraftPlayerSkills.skillSheet(playerName, player);
+						DwarfCraftPlayerSkills.skillSheet(player, viewer);
 						event.setCancelled(true);
 						return;
 					}
 					else if (split[1].equalsIgnoreCase("makemeadwarf")){
-						if(!DwarfCraftPlayerSkills.isPlayerElf(playerName)){
+						if(!DwarfCraftPlayerSkills.isPlayerElf(player)){
 							player.sendMessage("You're already a dwarf. If you want to reset                     skills  use /dc REALLYmakemeadwarf");
 							event.setCancelled(true);
 							return;
 						}
 						player.sendMessage("A wise decision. One second...*poof*");
-						DwarfCraftSkillTraining.makeDwarf(playerName);
+						DwarfCraftSkillTraining.makeDwarf(player);
 						player.sendMessage("welcome back to the dwarven brotherhood!");
 						event.setCancelled(true);
 						return;
 					}
 					else if (split[1].equalsIgnoreCase("reallymakemeadwarf")){
 						player.sendMessage("Alright, I guess...*poof*");
-						DwarfCraftSkillTraining.makeDwarf(playerName);
+						DwarfCraftSkillTraining.makeDwarf(player);
 						player.sendMessage("welcome back to the dwarven brotherhood!");
 						event.setCancelled(true);
 						return;
@@ -137,7 +143,7 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 					}
 					else if (split[1].equalsIgnoreCase("ireallywanttobeanelf")){
 						player.sendMessage("Ok, wussy...*poof*");
-						DwarfCraftSkillTraining.makeElf(playerName);
+						DwarfCraftSkillTraining.makeElf(player);
 						player.sendMessage("Now you're an elf! *ick!*");
 						event.setCancelled(true);
 						return;
@@ -152,15 +158,15 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 			catch (NumberFormatException f) {return;}
 		}
 	}
-	
+
 	@Override
 	public void onPlayerJoin(PlayerEvent event){
 		Player player = event.getPlayer();
 		String playerName = player.getDisplayName();
-		if(DwarfCraftPlayerSkills.getPlayerNumber(playerName) == -1){
+		if(DwarfCraftPlayerSkills.getPlayerNumber(player) == -1){
 			int playerCount = DwarfCraftPlayerSkills.countPlayers();
 			if(playerCount != DwarfCraftPlayerSkills.maxPlayers){
-				DwarfCraftPlayerSkills.addNewPlayer(playerName, player);
+				DwarfCraftPlayerSkills.addNewPlayer(player);
 				playerCount++;
 				System.out.println("There are now " + playerCount + " players registered with DwarfCraft");
 			}
@@ -169,7 +175,7 @@ public class DwarfCraftPlayerListener extends PlayerListener {
 			}
 		}
 		else {
-			if(DwarfCraftSkillTraining.isPlayerElf(playerName)){
+			if(DwarfCraftSkillTraining.isPlayerElf(player)){
 				player.sendMessage("Welcome, elf " + playerName);
 				//welcome elf, may you die often due to your unskilled nature
 			}

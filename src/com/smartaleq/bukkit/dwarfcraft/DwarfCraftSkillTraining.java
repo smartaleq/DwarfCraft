@@ -16,16 +16,16 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 	 * return 0: failed
 	 * return 1: success
 	 */
-	public static int attemptSkillUp(int skillId, String playerName, Player player){ 
+	public static int attemptSkillUp(int skillId, Player player){ 
 		try{
-			if(DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName) == -1){return -2;}
-			if(DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName) == 30){return -2;}
+			if(DwarfCraftPlayerSkills.getSkillLevel(skillId, player) == -1){return -2;}
+			if(DwarfCraftPlayerSkills.getSkillLevel(skillId, player) == 30){return -2;}
 			int[] skillCost;
 			skillCost = new int[8];
-			int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);
+			int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, player);
 			/* Dan thinks skillId could be removed from the arguments in this function
 			   getSkillTrainingCost */
-			skillCost = Skills.values()[skillId].getSkillTrainingCost(skillId, newSkillLevel, playerName);
+			skillCost = Skills.values()[skillId].getSkillTrainingCost(skillId, newSkillLevel, player);
 			for (int i = 0; i < skillCost[0];i++){
 				//check inventory quantity for needed items
 				if (DwarfCraftInventory.countInventoryItems(skillCost[1+2*i], player) < skillCost[2+2*i]){return -1;}
@@ -38,8 +38,8 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 	/*
 	 * increases a players skill by skillId then backs up skills data
 	 */
-	public static void increaseSkill(int skillId, String playerName){
-		int playerNumber = getPlayerNumber(playerName);
+	public static void increaseSkill(int skillId, Player player){
+		int playerNumber = getPlayerNumber(player);
 		playerSkillsArray[playerNumber][skillId]++;
 		backupSkills();
 		saveSkills();
@@ -49,8 +49,8 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 	/*
 	 * makes a player an elf, making most skills behave similarly to vanilla
 	 */
-	public static void makeElf(String playerName){
-		int playerNumber = getPlayerNumber(playerName);
+	public static void makeElf(Player player){
+		int playerNumber = getPlayerNumber(player);
 		playerSkillsArray[playerNumber][0] = 1;
 		DwarfCraftPlayerSkills.backupSkills();
 		DwarfCraftPlayerSkills.saveSkills();
@@ -59,23 +59,21 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 	/*
 	 * resets a player to dwarfmode with all skills 0
 	 */
-	public static void makeDwarf(String playerName){
-		int playerNumber = getPlayerNumber(playerName);
+	public static void makeDwarf(Player player){
+		int playerNumber = getPlayerNumber(player);
 		for(int i = 0; i < maximumSkillCount; i++){
 			playerSkillsArray[playerNumber][i] = 0;
 		}
 		DwarfCraftPlayerSkills.backupSkills();
 		DwarfCraftPlayerSkills.saveSkills();
-		// Its mad we're doing this from a static function :[
-		//CraftServer.getPlayer(playerName).sendMessage("You're now a Dwarf");
-		
+		player.sendMessage("You're now a Dwarf");
 	}
 	
 	/*
 	 * this will count how many skills a player has above level 5
 	 */
-	public static int countHighSkills(String playerName){
-		int playerNumber = getPlayerNumber(playerName);
+	public static int countHighSkills(Player player){
+		int playerNumber = getPlayerNumber(player);
 		int highSkillsCount = 0;
 		for(int i = 0; i < maximumSkillCount; i++){
 			if(playerSkillsArray[playerNumber][i] > 5){ highSkillsCount++;};
@@ -87,28 +85,28 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 	 * this will return the skill level of a players 4th highest skill if they have less that 16 skills above 5
 	 * if they have 17+ skills above 5, it will return their top 25th percentile skill level
 	 */
-	public static int topQuartileThreshold(String playerName){
+	public static int topQuartileThreshold(Player player){
 		int[] tempArray;
 		tempArray = new int[99];
-		int playerNumber = getPlayerNumber(playerName);
+		int playerNumber = getPlayerNumber(player);
 		tempArray = playerSkillsArray[playerNumber];
 		Arrays.sort(tempArray);
-		int highestQuartileValue = Math.min(tempArray[99-(Math.min((countHighSkills(playerName)+3)/4,4))],5);
+		int highestQuartileValue = Math.min(tempArray[99-(Math.min((countHighSkills(player)+3)/4,4))],5);
 		return highestQuartileValue;
 	}
 	
-	public static int topThreeQuartileThreshold(String playerName){
+	public static int topThreeQuartileThreshold(Player player){
 		int[] tempArray;
 		tempArray = new int[99];
-		int playerNumber = getPlayerNumber(playerName);
+		int playerNumber = getPlayerNumber(player);
 		tempArray = playerSkillsArray[playerNumber];
 		Arrays.sort(tempArray);
-		int topThreeQuartileValue = Math.min(tempArray[99-(Math.min(3*(countHighSkills(playerName))/4,12))],5);
+		int topThreeQuartileValue = Math.min(tempArray[99-(Math.min(3*(countHighSkills(player))/4,12))],5);
 		return topThreeQuartileValue;
 	}
 		
-	public static int playerLevel(String playerName){
-		int playerNumber = getPlayerNumber(playerName);
+	public static int playerLevel(Player player){
+		int playerNumber = getPlayerNumber(player);
 		int playerLevel = 5;
 		int highestSkill = 0;
 		
@@ -122,20 +120,20 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 		return playerLevel;
 	}
 
-    public static void skillInfo(Player player, String playerName, int skillId) {
-	int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName) + 1;
-	player.sendMessage("-----------------------------------------------------");
-	player.sendMessage("Skill Information: " + Skills.values()[skillId].professionName + " (id: " + skillId + "a)");
-	player.sendMessage("To train to level " + newSkillLevel + " will cost:");
-	int[] trainingCosts;
-	trainingCosts = new int[7];
-	trainingCosts = Skills.values()[skillId].getSkillTrainingCost(skillId, newSkillLevel, playerName);
-	player.sendMessage("item Id: " + trainingCosts[1] + "  number required: " + trainingCosts[2]);
-	if (trainingCosts[0]>1){player.sendMessage("item Id: " + trainingCosts[3] + "  number required: " + trainingCosts[4]);}
-	if (trainingCosts[0]>2){player.sendMessage("item Id: " + trainingCosts[5] + "  number required: " + trainingCosts[6]);}
-	player.sendMessage("-----------------------------------------------------");
-    }
-    
+	public static void skillInfo(Player player, int skillId) {
+		int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, player) + 1;
+		player.sendMessage("-----------------------------------------------------");
+		player.sendMessage("Skill Information: " + DwarfCraftSkills.getSkillName(skillId) + " (id: " + skillId + "a)");
+		player.sendMessage("To train to level " + newSkillLevel + " will cost:");
+		int[] trainingCosts;
+		trainingCosts = new int[7];
+		trainingCosts = DwarfCraftSkills.getSkillTrainingCost(skillId, newSkillLevel, player);
+		player.sendMessage("item Id: " + trainingCosts[1] + "  number required: " + trainingCosts[2]);
+		if (trainingCosts[0]>1){player.sendMessage("item Id: " + trainingCosts[3] + "  number required: " + trainingCosts[4]);}
+		if (trainingCosts[0]>2){player.sendMessage("item Id: " + trainingCosts[5] + "  number required: " + trainingCosts[6]);}
+		player.sendMessage("-----------------------------------------------------");
+	}
+
 	public static int getSkillIdFromName(String string) {
 		for(int skillId = 0; skillId < maximumSkillCount; skillId++){
 			System.out.println("trying to get skill name " + string + "at skillId " + skillId);
