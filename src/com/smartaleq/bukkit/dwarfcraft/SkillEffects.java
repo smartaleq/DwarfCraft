@@ -142,7 +142,7 @@ public enum SkillEffects {
 		List outputArray = new ArrayList();
 		System.out.println(itemId);
 		for(SkillEffects s : SkillEffects.values())
-		    if(effectType.equalsIgnoreCase(s.effectType))
+		    if(s.searchedItemId == itemId && effectType.equalsIgnoreCase(s.effectType))
 			outputArray.add(s);
 		return outputArray;
 	}
