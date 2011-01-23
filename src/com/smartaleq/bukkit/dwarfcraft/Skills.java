@@ -1,6 +1,7 @@
 package com.smartaleq.bukkit.dwarfcraft;
 	
 public enum Skills {
+    // Use dynamic sized lists instead of arrays and a length for bonuses eventually
     PICKAXEUSE (1,"Pickaxe Use","Tool Use",1,new int[] {10,0,0,0,0,0,0,0},1,4,16,0,0,0,0,1,1.3),
 	SHOVELUSE (2,"Shovel Use","Tool Use",1,new int[] {20,0,0,0,0,0,0,0},1,3,32,0,0,0,0,0.5,1.3),
 	AXEDURABILITY (3,"Axe Durability","Tool Use",1,new int[] {30,0,0,0,0,0,0,0},1,17,16,0,0,0,0,0.5,1.3),
