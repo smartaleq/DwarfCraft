@@ -1,5 +1,6 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
+import java.util.*;
 import org.bukkit.block.Block;
 import org.bukkit.Material;
 import org.bukkit.Location;
@@ -36,35 +37,39 @@ public class DwarfCraftBlockListener extends BlockListener {
 			/* 
 			 * check to see if block destroyed has itemdrop effects listed
 			 */
-			int applicableEffects[] = new int[7]; 
-			applicableEffects = DwarfCraftSkillEffects.getEffects(destroyedBlockType, "itemdrop");
-			if (applicableEffects[0] == 0) {
-				return;}
-			else {
-				//replace block with air and drop appropriate results
-				event.setCancelled(true); 	
-				block.setType(Material.AIR);	
-				for(int i=1; i <= applicableEffects[0]; i++) {
-					System.out.println("for effect # " + i);
-					int effectId = applicableEffects[i];
-					int skillId = DwarfCraftSkillEffects.getSkillForEffect(effectId);
-					int playerSkillLevel;
-					//elves get the elf level (close as possible to 
-					if(DwarfCraftPlayerSkills.isPlayerElf(player)){
-						playerSkillLevel = DwarfCraftSkillEffects.getElfLevel(effectId);
-					}
-					else {
-						playerSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, player);
-					}
-					
-					double effectBenefit = DwarfCraftSkillEffects.getEffectValue(effectId, playerSkillLevel);
-					int outputBlock = DwarfCraftSkillEffects.getEffectResult(effectId);
-					int outputCount = DwarfCraftSkillEffects.getRandomBlockCount(effectBenefit);
-					byte outputDamage = (byte)0;
-					if (outputBlock >0){
-					event.getBlock().getWorld().dropItem(destroyedBlockLocation, new ItemStack(outputBlock, outputCount, outputDamage));
-					}
-				}
+			List<SkillEffects> applicableEffects = SkillEffects.getEffects(destroyedBlockType, "itemdrop");
+			if (applicableEffects.size() == 0)
+				return;
+			// DAN SAYS: When you have an if(cond) return; else { stuff }
+			// you can ommit the else, and just state 'stuff'.
+			// DELETE THIS COMMENT once you've read it ^^^^^
+
+			//replace block with air and drop appropriate results
+			event.setCancelled(true); 	
+			block.setType(Material.AIR);
+			for(SkillEffects se : applicableEffects) {
+			    System.out.println("for effect # " + se.effectId);
+			    //elves get the elf level (close as possible to 
+			    int playerSkillLevel;
+			    if(DwarfCraftPlayerSkills.isPlayerElf(player)){
+				playerSkillLevel = se.elfEffectLevel;
+			    }
+			    else {
+				playerSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(se.getSkillForEffect(), player);
+			    }					
+			    if (/* Output Block*/ se.createdItemId > 0){
+				event.getBlock().getWorld().dropItem(
+								     destroyedBlockLocation,
+								     new ItemStack(
+										   // Output Block
+										   se.createdItemId,
+										   // Output Count
+										   se.getRandomBlockCount(playerSkillLevel),
+										   // OutputDamage
+										   (byte)0
+										   )
+								     );
+			    }
 			}
 		}
 	}

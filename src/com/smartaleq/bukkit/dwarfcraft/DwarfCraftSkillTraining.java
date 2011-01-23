@@ -25,7 +25,7 @@ public class DwarfCraftSkillTraining extends DwarfCraftPlayerSkills{
 			int newSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, player);
 			/* Dan thinks skillId could be removed from the arguments in this function
 			   getSkillTrainingCost */
-			skillCost = Skills.values()[skillId].getSkillTrainingCost(skillId, newSkillLevel, player);
+			skillCost = Skills.values()[skillId].getSkillTrainingCost(newSkillLevel, player);
 			for (int i = 0; i < skillCost[0];i++){
 				//check inventory quantity for needed items
 				if (DwarfCraftInventory.countInventoryItems(skillCost[1+2*i], player) < skillCost[2+2*i]){return -1;}

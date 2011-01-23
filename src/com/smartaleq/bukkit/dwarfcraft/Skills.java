@@ -1,4 +1,6 @@
 package com.smartaleq.bukkit.dwarfcraft;
+
+import org.bukkit.entity.Player;
 	
 public enum Skills {
     // Use dynamic sized lists instead of arrays and a length for bonuses eventually
@@ -103,7 +105,7 @@ public enum Skills {
 	
 	/* CHECK THIS ARRAYMATH, int[7], with first value as count? why?
 	   what happened to the rest of the bonusIds? there are 8 per dude */
-	public int[] getSkillTrainingCost(int skillId, int newSkillLevel, String playerName){
+	public int[] getSkillTrainingCost(int newSkillLevel, Player playerName){
 	    int[] trainingCosts;
 	    trainingCosts = new int[7];
 	    trainingCosts[0] = this.bonusCount;
