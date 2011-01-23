@@ -45,12 +45,12 @@ public void onEnable() {
 	pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
 
 	
-	DwarfCraftSkillEffects.readEffects();
 	/* Dan doesnt know how java does enums well enough.
 	   He thinks it will eventually be worth investigating
 	   whether the enums need to be initialized manually at runtime,
 	   and a public instance of each kept for general touching.
 	   perhaps with a wrapper class*/
+	//DwarfCraftSkillEffects.readEffects();
 	//DwarfCraftSkills.readSkills();
 	DwarfCraftPlayerSkills.readPlayers();
 	
