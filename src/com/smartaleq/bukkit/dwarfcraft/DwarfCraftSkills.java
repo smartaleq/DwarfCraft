@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.bukkit.entity.Player;
+
 	
 public class DwarfCraftSkills {
 		
@@ -68,7 +70,7 @@ public class DwarfCraftSkills {
 		return skillsArray[skillId][skillSchoolColumn];
 	}
 	
-	public static int[] getSkillTrainingCost(int skillId, int newSkillLevel, String playerName){
+	public static int[] getSkillTrainingCost(int skillId, int newSkillLevel, Player player){
 		int[] trainingCosts;
 		trainingCosts = new int[7];
 		trainingCosts[0] = Integer.parseInt(skillsArray[skillId][skillTrainingItemCountColumn]);
@@ -81,8 +83,8 @@ public class DwarfCraftSkills {
 		if(newSkillLevel > 5){
 			baseMultiplier = baseMultiplier * (Math.pow(Double.parseDouble(skillsArray[skillId][skillTrainingMasterMultiplierColumn]), Math.min(0,newSkillLevel-5)));
 			//mutliplier for secondary skill training
-			if(newSkillLevel > 5 && newSkillLevel < DwarfCraftSkillTraining.topQuartileThreshold(playerName)){
-				baseMultiplier = baseMultiplier * (1 + (DwarfCraftSkillTraining.playerLevel(playerName)/100+2*DwarfCraftSkillTraining.playerLevel(playerName)));
+			if(newSkillLevel > 5 && newSkillLevel < DwarfCraftSkillTraining.topQuartileThreshold(player)){
+				baseMultiplier = baseMultiplier * (1 + (DwarfCraftSkillTraining.playerLevel(player)/100+2*DwarfCraftSkillTraining.playerLevel(player)));
 			}
 		}
 		for(int i=0 ; i<trainingCosts[0] ; i++){

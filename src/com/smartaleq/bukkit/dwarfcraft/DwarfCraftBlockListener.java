@@ -33,8 +33,6 @@ public class DwarfCraftBlockListener extends BlockListener {
 			int destroyedBlockType = block.getTypeId();
 //			int destroyedBlockMeta = block.getData();
 			Player player = event.getPlayer();
-			String playerName = player.getDisplayName();
-
 			/* 
 			 * check to see if block destroyed has itemdrop effects listed
 			 */
@@ -52,11 +50,11 @@ public class DwarfCraftBlockListener extends BlockListener {
 					int skillId = DwarfCraftSkillEffects.getSkillForEffect(effectId);
 					int playerSkillLevel;
 					//elves get the elf level (close as possible to 
-					if(DwarfCraftPlayerSkills.isPlayerElf(playerName)){
+					if(DwarfCraftPlayerSkills.isPlayerElf(player)){
 						playerSkillLevel = DwarfCraftSkillEffects.getElfLevel(effectId);
 					}
 					else {
-						playerSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);
+						playerSkillLevel = DwarfCraftPlayerSkills.getSkillLevel(skillId, player);
 					}
 					
 					double effectBenefit = DwarfCraftSkillEffects.getEffectValue(effectId, playerSkillLevel);

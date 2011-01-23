@@ -18,8 +18,9 @@ public class DwarfCraftPlayerSkills {
 	
 	static int maximumSkillCount = 100;
 		
-	public static int getPlayerNumber(String playerName){
-		int playerNumber = -1; //come back and change this
+	public static int getPlayerNumber(Player player){
+		int playerNumber = -1;
+		String playerName = player.getDisplayName();
 		for(int i=0; i < maxPlayers; i++){
 			if(playerNamesArray[i] == null){
 				continue;
@@ -42,24 +43,25 @@ public class DwarfCraftPlayerSkills {
 		return playerCount;
 	}
 	
-	static void addNewPlayer(String playerName, Player player){
+	static void addNewPlayer(Player player){
 		int newPlayerNumber = countPlayers()+1;
+		String playerName = player.getDisplayName();
 		playerNamesArray[newPlayerNumber] = playerName;
 		player.sendMessage("Welcome to the server, " + Colors.Blue + playerName);
 		backupSkills();
 		saveSkills();		
-		DwarfCraftSkillTraining.makeDwarf(playerName);
+		DwarfCraftSkillTraining.makeDwarf(player);
 	}
 	
-	public static int getSkillLevel(int skillId, String playerName){
-		int playerNumber = getPlayerNumber(playerName);
+	public static int getSkillLevel(int skillId, Player player){
+		int playerNumber = getPlayerNumber(player);
 		int skillLevel = playerSkillsArray[playerNumber][skillId]; 
 		if(DwarfCraftSkills.getSkillName(skillId)==null){return -1;}
 		return skillLevel;
 	}
 	
-	public static Boolean isPlayerElf(String playerName){
-		int playerNumber = getPlayerNumber(playerName);
+	public static Boolean isPlayerElf(Player player){
+		int playerNumber = getPlayerNumber(player);
 		Boolean isElf = false;
 		int elfValue = playerSkillsArray[playerNumber][0];
 		if(elfValue != 0){isElf = true;}
@@ -143,18 +145,19 @@ public class DwarfCraftPlayerSkills {
 		}
 	}
 
-	public static void skillSheet(String playerName, Player player) {
+	public static void skillSheet(Player player, Player viewer) {
 		String[] skillNames;
 		skillNames = new String[3];
 		String skillName;
 		int[] skillLevels;
 		skillLevels = new int[3];
+		String playerName = player.getDisplayName();
 	
-		player.sendMessage("Printing Skill Sheet for " + playerName + "  Player Level is " + DwarfCraftSkillTraining.playerLevel(playerName));
+		viewer.sendMessage("Printing Skill Sheet for " + playerName + "  Player Level is " + DwarfCraftSkillTraining.playerLevel(player));
 		int skillId=0;
 		int printLineSkillCount=0;
-		if(DwarfCraftPlayerSkills.isPlayerElf(playerName)){
-			player.sendMessage("Elves don't have skills, numbskull");
+		if(DwarfCraftPlayerSkills.isPlayerElf(player)){
+			viewer.sendMessage("Elves don't have skills, numbskull");
 			return;
 		}
 		while (skillId<maximumSkillCount){
@@ -168,23 +171,23 @@ public class DwarfCraftPlayerSkills {
 				skillName = DwarfCraftSkills.skillName(skillId);
 				if (skillName != null){
 					skillNames[printLineSkillCount] = skillName;
-					skillLevels[printLineSkillCount] = DwarfCraftPlayerSkills.getSkillLevel(skillId, playerName);
+					skillLevels[printLineSkillCount] = DwarfCraftPlayerSkills.getSkillLevel(skillId, player);
 					printLineSkillCount++;
 				}
 				skillId++;
 			}
 			if (printLineSkillCount == 3) {
-				player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);
+				viewer.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);
 			}
 		}
 //		if (printLineSkillCount==2){
 //			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]+"  "+skillNames[2]+": "+skillLevels[2]);
 //		}
 		if (printLineSkillCount==2){
-			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]);
+			viewer.sendMessage("  "+skillNames[0]+": "+skillLevels[0]+"  "+skillNames[1]+": "+skillLevels[1]);
 		}
 		if (printLineSkillCount==1){
-			player.sendMessage("  "+skillNames[0]+": "+skillLevels[0]);
+			viewer.sendMessage("  "+skillNames[0]+": "+skillLevels[0]);
 		}		
 	}	
 	
